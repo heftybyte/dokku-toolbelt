@@ -1,0 +1,27 @@
+{
+  "name": "dokku-toolbelt",
+  "version": "0.0.0",
+  "description": "Toolbelt for dokku similar to Heroku toolbelt",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/heftybyte/dokku-toolbelt.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heftybyte/dokku-toolbelt/issues"
+  },
+  "keywords": [
+    "dokku",
+    "heroku",
+    "digital ocean"
+  ],
+  "homepage": "https://github.com/heftybyte/dokku-toolbelt",
+  "dependencies": {
+    "request": "^2.34.0"
+  }
+}
