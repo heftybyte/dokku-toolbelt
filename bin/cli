@@ -1,14 +1,77 @@
 #!/usr/bin/env node
 
+var fs = require('fs');
 var program = require('commander');
+var promptly = require('promptly');
+var async = require('async');
+var DigitalOcean = require('../lib/platform/digitalocean');
+
+
+var api = getApi();
+if (!api) {
+    console.log('You need to setup your account first.');
+    setup();
+    return;
+}
 
 program
-  .version('0.0.1')
-  .option('--setup', 'Setup')
-  .parse(process.argv);
+    .version('0.0.1')
 
-if(program.setup) setup();
+program
+    .command('setup')
+    .description('Setup your Digital Ocean credentials.')
+    .action(setup);
+
+program
+    .command('list-droplets')
+    .description('List your droplets.')
+    .action(api.listDroplets);
+
+
+
+program.parse(process.argv);
+
+function getApi() {
+    try {
+        var clientId = fs.readFileSync('clientid', {encoding: 'utf8'});
+        var apiKey = fs.readFileSync('apikey', {encoding: 'utf8'});
+    } catch(err) {
+       return false;
+    }
+
+     return new DigitalOcean(clientId, apiKey);
+}
+
+function getClientId(callback) {
+    promptly.prompt('Enter Your Client Id: ', function(error, clientId) {
+        fs.writeFileSync('clientid', clientId);
+        return callback();
+    });
+}
+
+function getApiKey(callback) {
+    promptly.prompt('Enter Your API Key: ', function(error, apiKey) {
+        fs.writeFileSync('apikey', apiKey);
+        return callback();
+    });
+}
 
 function setup() {
-
+    async.waterfall([
+        function(callback){
+            getClientId(callback);
+        },
+        function(callback){
+            getApiKey(callback);
+        }
+    ], function (err, result) {
+        var api = getApi();
+        api.listDroplets(function(err, res, body) {
+            console.log('show me mahh bodyyy', body);
+            console.log('Set up complete.');
+        });
+    });
 }
+
+    //A2Zd5HMD3MgnB7xaBe4bw
+//d2e187e0b910cd705b400e7cad7feb99
